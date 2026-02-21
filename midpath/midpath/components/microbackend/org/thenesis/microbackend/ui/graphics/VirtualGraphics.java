@@ -15,15 +15,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA 
  */
+
 package org.thenesis.microbackend.ui.graphics;
 
 import org.thenesis.microbackend.ui.Logging;
 
 public class VirtualGraphics {
-
     private VirtualSurface surface;
 
-    // Image blending mode. TODO: replace BLEND by ADD and SUB.
     public static final int REPLACE = 0, BLEND = 1, LOGIC = 2;
     private int blendMode = REPLACE;
 
@@ -227,14 +226,13 @@ public class VirtualGraphics {
     }
 
     public synchronized void drawString(String str, int x, int y, int anchor) {
-        
-        if (Logging.TRACE_ENABLED) 
+        if (Logging.TRACE_ENABLED) {
             System.out.println("[DEBUG] VirtualGraphics.drawString(): not implemented yet");
+        }
     
         if (currentFont != null) {
             currentFont.render(this, str, x, y, anchor);
         }
-
     }
 
     public synchronized void setClip(int x, int y, int width, int height) {
@@ -710,12 +708,10 @@ public class VirtualGraphics {
      * @param y3 the y coordinate of the third vertex of the triangle
      *
      */
-    public void fillTriangle(int x1, int y1, 
-                                    int x2, int y2,
-                                    int x3, int y3) {
-        if (Logging.TRACE_ENABLED)
+    public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+        if (Logging.TRACE_ENABLED) {
             System.out.println("[DEBUG] VirtualGraphics.fillTriangle(): not yet implemented");
-        
+        }
     }
     
     /**
@@ -1925,15 +1921,14 @@ public class VirtualGraphics {
      * @see Image
      */
     public void drawImage(VirtualImage img, int x, int y, int anchor) {
-        
-        if (Logging.TRACE_ENABLED)
+        if (Logging.TRACE_ENABLED) {
             System.out.println("VirtualGraphics.drawImage(): not yet implemented");
+        }
         
         if (!img.render(this, x, y, anchor)) {
             throw new IllegalArgumentException("");
         }
     }
-
 
     //
     // public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3)
@@ -1983,7 +1978,5 @@ public class VirtualGraphics {
         // left
         fillArc(x + w - arcWidth, y + h - arcHeight, arcWidth, arcHeight, 270, 90); // bottom
         // right
-
     }
-
 }

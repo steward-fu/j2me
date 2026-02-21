@@ -1,5 +1,7 @@
 /*
- * MIDPath - Copyright (C) 2006-2008 Guillaume Legris, Mathieu Legris
+ * MIDPath
+ * Copyright (C) 2006-2008 Guillaume Legris, Mathieu Legris
+ * Copyright (C) 2026 Steward <steward.fu@mail.com>
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version
@@ -15,6 +17,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA  
  */
+
 package org.thenesis.microbackend.ui.sdl;
 
 import java.io.IOException;
@@ -39,7 +42,6 @@ import sdljava.video.SDLVideo;
 import sdljava.x.swig.SDLPressedState;
 
 public class SDLBackend implements UIBackend {
-
     public static final String VIDEO_MODE_SOFTWARE = "SW";
     public static final String VIDEO_MODE_HARDWARE = "HW";
 
@@ -65,10 +67,7 @@ public class SDLBackend implements UIBackend {
     }
 
     public SDLBackend() {
-
     }
-
-    /* UIBackend interface */
 
     public void configure(Configuration conf, int width, int height) {
         canvasWidth = width;
@@ -76,7 +75,6 @@ public class SDLBackend implements UIBackend {
 
         bitsPerPixel = conf.getIntParameter("org.thenesis.microbackend.ui.sdl.bitsPerPixel", 32);
         videoMode = conf.getParameterDefault("org.thenesis.microbackend.ui.sdl.videoMode", "SW");
-
     }
 
     public void setBackendEventListener(BackendEventListener listener) {
@@ -84,12 +82,11 @@ public class SDLBackend implements UIBackend {
     }
 
     public void updateARGBPixels(int[] argbPixels, int x, int y, int widht, int heigth) {
-
-        // Draw rgb field on the surface
         rootARGBSurface.setPixelData32(argbPixels);
 
-        if (Logging.TRACE_ENABLED)
+        if (Logging.TRACE_ENABLED) {
             System.out.println("[DEBUG] Toolkit.refresh(): x=" + x + " y=" + y + " widht=" + widht + " heigth=" + heigth);
+        }
 
         try {
             rootARGBSurface.blitSurface(screenSurface);
@@ -97,7 +94,6 @@ public class SDLBackend implements UIBackend {
         } catch (SDLException e) {
             e.printStackTrace();
         }
-
     }
 
     public int getWidth() {
@@ -114,29 +110,24 @@ public class SDLBackend implements UIBackend {
     }
 
     public void open() throws IOException {
-
         long flags = videoMode.equalsIgnoreCase("HW") ? SDLVideo.SDL_HWSURFACE : SDLVideo.SDL_SWSURFACE;
 
         try {
             SDLMain.init(SDLMain.SDL_INIT_VIDEO);
             SDLVideo.showCursor(SDLVideo.SDL_DISABLE);
             screenSurface = SDLVideo.setVideoMode(canvasWidth, canvasHeight, bitsPerPixel, flags);
-            rootARGBSurface = SDLVideo.createRGBSurface(SDLVideo.SDL_SWSURFACE, canvasWidth, canvasHeight, 32, 0x00ff0000L, 0x0000ff00L,
-                0x000000ffL, 0xff000000L);
-            if (Logging.TRACE_ENABLED)
+            rootARGBSurface = SDLVideo.createRGBSurface(SDLVideo.SDL_SWSURFACE, canvasWidth, canvasHeight, 32, 0x00ff0000L, 0x0000ff00L, 0x000000ffL, 0xff000000L);
+            if (Logging.TRACE_ENABLED) {
                 System.out.println("[DEBUG] Toolkit.initialize(): VideoSurface: " + rootARGBSurface);
+            }
             eventThread = new SDLEventThread();
             eventThread.start();
-
         } catch (SDLException e) {
             e.printStackTrace();
         }
     }
 
-    /* Internals */
-
     public class SDLEventThread implements Runnable {
-
         private volatile Thread thread;
 
         public void start() {
@@ -148,12 +139,7 @@ public class SDLBackend implements UIBackend {
             thread = null;
         }
 
-        /**
-         * The main event pump loop. Events are pumped into the system event
-         * queue.
-         */
         public void run() {
-
             try {
                 SDLEvent.enableUNICODE(1);
                 while (Thread.currentThread() == thread) {
@@ -168,36 +154,36 @@ public class SDLBackend implements UIBackend {
         }
 
         public void processEvent(SDLEvent event) {
-
-            if (Logging.TRACE_ENABLED)
+            if (Logging.TRACE_ENABLED) {
                 System.out.println("[DEBUG] SDLEventThread.processEvent()");
+            }
 
-            if (event instanceof SDLMouseButtonEvent)
+            if (event instanceof SDLMouseButtonEvent) {
                 processEvent((SDLMouseButtonEvent) event);
-            else if (event instanceof SDLMouseMotionEvent)
+            }
+            else if (event instanceof SDLMouseMotionEvent) {
                 processEvent((SDLMouseMotionEvent) event);
-            else if (event instanceof SDLQuitEvent)
+            }
+            else if (event instanceof SDLQuitEvent) {
                 processEvent((SDLQuitEvent) event);
-            //else if (event instanceof SDLExposeEvent)
-            //	processEvent((SDLExposeEvent) event);
-            else if (event instanceof SDLKeyboardEvent)
+            }
+            else if (event instanceof SDLKeyboardEvent) {
                 processEvent((SDLKeyboardEvent) event);
+            }
         }
 
         public void processEvent(SDLMouseButtonEvent event) {
-
-            //int sdlButton = event.getButton();
-
             if (event.getState() == SDLPressedState.PRESSED) {
-                if (Logging.TRACE_ENABLED)
+                if (Logging.TRACE_ENABLED) {
                     System.out.println("[DEBUG] SDLEventThread.processEvent(): MOUSE_PRESSED");
+                }
                 listener.mousePressed(event.getX(), event.getY(), 0);
             } else {
-                if (Logging.TRACE_ENABLED)
+                if (Logging.TRACE_ENABLED) {
                     System.out.println("[DEBUG] SDLEventThread.processEvent(): MOUSE_RELEASED");
+                }
                 listener.mouseReleased(event.getX(), event.getY(), 0);
             }
-
         }
 
         public void processEvent(SDLMouseMotionEvent event) {
@@ -205,91 +191,28 @@ public class SDLBackend implements UIBackend {
         }
 
         public void processEvent(SDLKeyboardEvent event) {
-
-            //int unicode = event.getUnicode();
+            int unicode = event.getUnicode();
             int keyCode = event.getSym();
-            int unicode = KeyConstants.CHAR_UNDEFINED;
-	    int keyType = convertKeyCodeBittboy(keyCode);
+            int cvtKeyCode = convertKeyCode(keyCode);
 
-            if (keyCode == SDLKey.SDLK_RCTRL) {
- 	        System.out.println("[EXIT] User forced exit");
-                System.exit(1); 
+            if (Logging.TRACE_ENABLED) {
+                System.out.println("[DEBUG] SDLEventThread.processEvent(): cvtKeyCode: " + cvtKeyCode + " unicode: " + unicode);
             }
 
-	    //System.out.println("[DEBUG] SDLEventThread.processEvent(): keyCode: " + keyCode + " keyType: " + keyType);
-	    if (event.getState() == SDLPressedState.PRESSED) {
-		if (Logging.TRACE_ENABLED)
-		    System.out.println("[DEBUG] SDLEventThread.processEvent(): keyCode: " + keyCode + " char: " + (char) unicode);
-		//listener.keyPressed(convertKeyCode(keyCode), (char) unicode, 0);
-		listener.keyPressed(keyType, (char) convertKeyCodeBittboyUnicode(keyCode), 0);
-	    } else if (event.getState() == SDLPressedState.RELEASED) {
-		//listener.keyReleased(convertKeyCode(keyCode), (char) unicode, 0);
-		listener.keyReleased(keyType, (char) convertKeyCodeBittboyUnicode(keyCode), 0);
-	    }
-	}
+            if (event.getState() == SDLPressedState.PRESSED) {
+                listener.keyPressed(cvtKeyCode, (char) 0, 0);
+            } else if (event.getState() == SDLPressedState.RELEASED) {
+                listener.keyReleased(cvtKeyCode, (char) 0, 0);
+            }
+        }
 
         public void processEvent(SDLQuitEvent event) {
             listener.windowClosed();
         }
-
     }
 
-    public static int convertKeyCodeBittboy(int keyCode) {
-	    switch (keyCode) {
-	    case SDLKey.SDLK_UP:
-		return KeyConstants.VK_UP;
-       	    case SDLKey.SDLK_DOWN:
-		return KeyConstants.VK_DOWN;
-	    case SDLKey.SDLK_RIGHT:
-		return KeyConstants.VK_RIGHT;
-	    case SDLKey.SDLK_LEFT:
-		return KeyConstants.VK_LEFT;
-	    case SDLKey.SDLK_ESCAPE:
-		return -6;
-	    case SDLKey.SDLK_LSHIFT:
-		return KeyConstants.VK_1;
-	    case SDLKey.SDLK_LALT:
-		return KeyConstants.VK_7;
-	    case SDLKey.SDLK_SPACE:
-		return KeyConstants.VK_3;
-	    case SDLKey.SDLK_LCTRL:
-		return KeyConstants.VK_5;
-	    case SDLKey.SDLK_RETURN:
-		return -7;
-	    //case SDLKey.SDLK_RCTRL:
-              //return KeyConstants.VK_0;
-	    default:
-		return KeyConstants.VK_UNDEFINED;
-	    }
-    }
-    public static int convertKeyCodeBittboyUnicode(int keyCode) {
-	    switch (keyCode) {
-	    case SDLKey.SDLK_UP:
-       	    case SDLKey.SDLK_DOWN:
-	    case SDLKey.SDLK_RIGHT:
-	    case SDLKey.SDLK_LEFT:
-	    case SDLKey.SDLK_ESCAPE:
-	    case SDLKey.SDLK_RETURN:
-		return KeyConstants.CHAR_UNDEFINED;
-	    case SDLKey.SDLK_LSHIFT:
-		return '1';
-	    case SDLKey.SDLK_LALT:
-		return '7';
-	    case SDLKey.SDLK_SPACE:
-		return '3';
-	    case SDLKey.SDLK_LCTRL:
-		return '5';
-	    //case SDLKey.SDLK_RCTRL:
-		//return '0';
-	    default:
-		return KeyConstants.CHAR_UNDEFINED;
-	    }
-    }
-    
     public static int convertKeyCode(int keyCode) {
-
         switch (keyCode) {
-
         case SDLKey.SDLK_UNKNOWN:
             return KeyConstants.VK_UNDEFINED;
         case SDLKey.SDLK_BACKSPACE:
@@ -311,7 +234,7 @@ public class SDLBackend implements UIBackend {
         case SDLKey.SDLK_QUOTEDBL:
             return KeyConstants.VK_QUOTEDBL;
         case SDLKey.SDLK_HASH:
-            return KeyConstants.VK_UNDEFINED; // FIXME
+            return KeyConstants.VK_UNDEFINED;
         case SDLKey.SDLK_DOLLAR:
             return KeyConstants.VK_DOLLAR;
         case SDLKey.SDLK_AMPERSAND:
@@ -368,9 +291,6 @@ public class SDLBackend implements UIBackend {
             return KeyConstants.VK_UNDEFINED;
         case SDLKey.SDLK_AT:
             return KeyConstants.VK_AT;
-            /* 
-             Skip uppercase letters
-             */
         case SDLKey.SDLK_LEFTBRACKET:
             return KeyConstants.VK_OPEN_BRACKET;
         case SDLKey.SDLK_BACKSLASH:
@@ -437,9 +357,6 @@ public class SDLBackend implements UIBackend {
             return KeyConstants.VK_Z;
         case SDLKey.SDLK_DELETE:
             return KeyConstants.VK_DELETE;
-            /* End of ASCII mapped keysyms */
-
-            /* Numeric keypad */
         case SDLKey.SDLK_KP0:
             return KeyConstants.VK_NUMPAD0;
         case SDLKey.SDLK_KP1:
@@ -474,8 +391,6 @@ public class SDLBackend implements UIBackend {
             return KeyConstants.VK_ENTER;
         case SDLKey.SDLK_KP_EQUALS:
             return KeyConstants.VK_EQUALS;
-
-            /* Arrows + Home/End pad */
         case SDLKey.SDLK_UP:
             return KeyConstants.VK_UP;
         case SDLKey.SDLK_DOWN:
@@ -494,8 +409,6 @@ public class SDLBackend implements UIBackend {
             return KeyConstants.VK_PAGE_UP;
         case SDLKey.SDLK_PAGEDOWN:
             return KeyConstants.VK_PAGE_DOWN;
-
-            /* Function keys */
         case SDLKey.SDLK_F1:
             return KeyConstants.VK_F1;
         case SDLKey.SDLK_F2:
@@ -526,8 +439,6 @@ public class SDLBackend implements UIBackend {
             return KeyConstants.VK_F14;
         case SDLKey.SDLK_F15:
             return KeyConstants.VK_F15;
-
-            /* Key state modifier keys */
         case SDLKey.SDLK_NUMLOCK:
             return KeyConstants.VK_NUM_LOCK;
         case SDLKey.SDLK_CAPSLOCK:
@@ -553,8 +464,6 @@ public class SDLBackend implements UIBackend {
             return KeyConstants.VK_ALT_GRAPH;
         case SDLKey.SDLK_COMPOSE:
             return KeyConstants.VK_COMPOSE;
-
-            /* Miscellaneous function keys */
         case SDLKey.SDLK_HELP:
             return KeyConstants.VK_HELP;
         case SDLKey.SDLK_PRINT:
@@ -566,14 +475,12 @@ public class SDLBackend implements UIBackend {
         case SDLKey.SDLK_MENU:
             return KeyConstants.VK_UNDEFINED;
         case SDLKey.SDLK_POWER:
-            return KeyConstants.VK_UNDEFINED; /* Power Macintosh power key */
+            return KeyConstants.VK_UNDEFINED;
         case SDLKey.SDLK_EURO:
-            return KeyConstants.VK_EURO_SIGN; /* Some european keyboards */
-
+            return KeyConstants.VK_EURO_SIGN;
         default:
             return KeyConstants.VK_UNDEFINED;
-
         }
     }
-
 }
+

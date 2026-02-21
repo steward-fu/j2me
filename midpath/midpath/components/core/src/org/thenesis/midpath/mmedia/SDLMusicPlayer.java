@@ -66,7 +66,6 @@ public class SDLMusicPlayer extends SDLPlayer {
     }
 
     protected Control doGetControl(String type) {
-	System.out.println("doGetControl():" + type);
 	if (type.equals(pkgName + "VolumeControl")) {
 	    return new SDLVolumeControl();
 	}
