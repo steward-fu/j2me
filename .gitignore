@@ -1,0 +1,4 @@
+midpath/midpath/dist/*.jar
+midpath/midpath/bin/0-prefs.db
+midpath/phoneme/cdc/build/*/.btclasses.clist
+midpath/phoneme/cdc/build/*/.libclasses.clist
