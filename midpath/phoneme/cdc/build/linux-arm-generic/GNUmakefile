@@ -34,7 +34,7 @@ USE_VERBOSE_MAKE ?= true
 # advantage of features the assembler does not support by default. For
 # example, add -Wa,-mcpu=iwmmxt if you are trying to use the Intel
 # WMMX coprocessor support.
-ASM_ARCH_FLAGS		=
+ASM_ARCH_FLAGS =
 
 # CC_ARCH_FLAGS: If your compiler is properly built for your target device,
 # usually you don't need to set CC_ARCH_FLAGS. However, in some cases the
@@ -53,7 +53,7 @@ ASM_ARCH_FLAGS		=
 # might seem like the right thing to do for an xscale target. However, there
 # was at least one case where -mcpu=xscale was already the default, and
 # using -mcpu=xscale caused a change in the ABI and broke things.
-CC_ARCH_FLAGS		= -Os -D__GLIBC__ -D_LFS_LARGEFILE -D_GNU_SOURCE -I/opt/buildroot-bittboy/output/build/linux-headers-4.14.139/arch/arm/include/
+CC_ARCH_FLAGS = -marm -Os -D__GLIBC__ -D_LFS_LARGEFILE -D_GNU_SOURCE -I/opt/buildroot-bittboy/output/build/linux-headers-4.14.139/arch/arm/include/
 
 # CC_ARCH_FLAGS_FDLIB: Mostly used to fix fdlibm correctness problems.
 # Some platforms require -ffloat-store or other options in order to
@@ -68,16 +68,16 @@ CC_ARCH_FLAGS_FDLIB	=
 # -fno-inline often produces better results, but typically not on ARM.
 #
 # There's no need to include any flags already specified in CC_ARCH_FLAGS
-CC_ARCH_FLAGS_LOOP 	=
+CC_ARCH_FLAGS_LOOP =
 
 # LINK_ARCH_FLAGS: Usually empty. If you need to specify -msoft-float
 # or -mhard-float in CC_ARCH_FLAGS, you may need to do the same in
 # LINK_ARCH_FLAGS.
-LINK_ARCH_FLAGS		=
+LINK_ARCH_FLAGS =
 
 # LINK_ARCH_LIBS: Used for extra libraries that you need to link with on
 # your platform. Usually empty for ARM. On some other platforms -lm is needed.
-LINK_ARCH_LIBS		=
+LINK_ARCH_LIBS =
 
 # Only enable USE_GCC2 if GCC 3.x or later is *not* being used
 USE_GCC2 ?= false
@@ -95,12 +95,10 @@ USE_AAPCS ?= true
 
 # Enable the JIT by default. You can always override this on the command line.
 CVM_JIT ?= true
-#CVM_JIT ?= false
-
 
 # Assume no hardware floating point support by default. If you have hardware
 # VFP support, then set CVM_JIT_USE_FP_HARDWARE=true.
-CVM_JIT_USE_FP_HARDWARE ?= false
+CVM_JIT_USE_FP_HARDWARE ?= true
 
 # CVM_TARGET_TOOLS_PREFIX: Used to specify where your target tools are
 # located. You can set it on the command line or here. Basically it is
@@ -109,10 +107,7 @@ CVM_JIT_USE_FP_HARDWARE ?= false
 # For example, if gcc is located at /opt/arm-linux/bin/arm-linux-gcc,
 # you would use:
 #
-#    CVM_TARGET_TOOLS_PREFIX=/opt/arm-linux/bin/arm-linux-
-#CVM_TARGET_TOOLS_PREFIX=/opt/arm-linux/bin/arm-linux-
-#CVM_TARGET_TOOLS_PREFIX=/opt/buildroot-bittboy/output/host/bin/arm-buildroot-linux-musleabi-
-CVM_TARGET_TOOLS_PREFIX=/opt/buildroot-bittboy/output/host/bin/arm-buildroot-linux-uclibcgnueabi-
+CVM_TARGET_TOOLS_PREFIX =
 
 #
 # Here are a number of common settings you may need or want to use on ARM.
@@ -124,7 +119,6 @@ CVM_TARGET_TOOLS_PREFIX=/opt/buildroot-bittboy/output/host/bin/arm-buildroot-lin
 #   CC_ARCH_FLAGS  = -Wa,-mcpu=iwmmxt
 #   CVM_DEFINES += -DCVM_ARM_HAS_WMMX
 #
-
 CVM_JVMTI=false
 
 # AAPCS callng conventions support. Usually needed for MontaVista, and 
@@ -138,7 +132,6 @@ CVM_JVMTI=false
 
 # Including top.mk is always done last. It will include all the required
 # CDC makefiles.
-
 J2ME_CLASSLIB=foundation
 
 include ../share/top.mk

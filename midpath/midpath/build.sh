@@ -1,38 +1,27 @@
 #!/bin/bash
 # Usage: type ./build.sh --help
 
-# Default commands and library locations
-JAVAC_CMD=javac
 JAR_CMD=jar
 JAR_FLAGS=cvf
+JAVAC_CMD=javac
 FASTJAR_ENABLED=no
 
 DIST_HOME=`pwd`
+JAR_DIST_HOME=$DIST_HOME/dist
+J2SE_JAR=$DIST_HOME/../glibj.zip
 
-J2SE_JAR=$DIST_HOME/../classpath-0.99/lib/glibj.zip
-
-JAR_DIST_HOME=$DIST_HOME/dist/
-
-# The file to use if you do not built it
-# yourself or the target name if it is
-# build
 CLDC_JAR=${JAR_DIST_HOME}/cldc1.1.jar
-
 CLDC_FLAGS="-source 1.3 -target 1.1 -nowarn"
 
-# Defaults
 CLDC_ENABLED=yes
 MIDPATH_ENABLED=yes
 
-# Default components/libraries
 SDLJAVA_CLDC_ENABLED=yes
 ESCHER_CLDC_ENABLED=yes
 JLAYERME_CLDC_ENABLED=yes
 JORBIS_CLDC_ENABLED=yes
 AVETANABT_CLDC_ENABLED=yes
 JGL_CLDC_ENABLED=yes
-
-# Optional components
 WEB_SERVICES_API_ENABLED=yes
 LOCATION_API_ENABLED=yes
 MESSAGING_API_ENABLED=yes
@@ -40,52 +29,39 @@ SVG_API_ENABLED=no
 SVG_API_AWT_ENABLED=no
 OPENGL_API_ENABLED=no
 M3G_API_ENABLED=no
-
 DEMOS_ENABLED=yes
-
 KXML2_DIST_ENABLED=yes
-
 NOKIA_ENABLED=yes
 
-# Overridable file names and default locations
 SDLJAVA_CLDC_JAR=${JAR_DIST_HOME}/sdljava-cldc.jar
 ESCHER_CLDC_JAR=${JAR_DIST_HOME}/escher-cldc.jar
 JLAYERME_CLDC_JAR=${JAR_DIST_HOME}/jlayerme-cldc.jar
 JORBIS_CLDC_JAR=${JAR_DIST_HOME}/jorbis-cldc.jar
 AVETANABT_CLDC_JAR=${JAR_DIST_HOME}/avetanabt-cldc.jar
-
 JAXP_JAR=$JAR_DIST_HOME/jsr172-jaxp.jar
 JAXRPC_JAR=$JAR_DIST_HOME/jsr172-jaxrpc.jar
 LOCATION_JAR=$JAR_DIST_HOME/jsr179-location.jar
 MESSAGING_JAR=$JAR_DIST_HOME/jsr205-messaging.jar
-
 SVG_CORE_JAR=$JAR_DIST_HOME/jsr226-svg-core.jar
 SVG_MIDP2_JAR=$JAR_DIST_HOME/jsr226-svg-midp2.jar
 SVG_AWT_JAR=$JAR_DIST_HOME/jsr226-svg-awt.jar
-
 JGL_CLDC_JAR=$JAR_DIST_HOME/jgl-cldc.jar
 OPENGLES_CORE_JAR=$JAR_DIST_HOME/jsr239-opengles-core.jar
 OPENGLES_JGL_JAR=$JAR_DIST_HOME/jsr239-opengles-jgl.jar
 OPENGLES_NIO_JAR=$JAR_DIST_HOME/jsr239-opengles-nio.jar
 M3G_JAR=$JAR_DIST_HOME/jsr184-m3g.jar
-
 MICROBACKEND_JAR=${JAR_DIST_HOME}/microbackend.jar
 NOKIA_JAR=${JAR_DIST_HOME}/nokia.jar
 
-CC='/opt/mmiyoo/bin/arm-linux-gnueabihf-gcc'
-
-# External library dependencies
-# (By default use the included ones.)
 KXML2_JAR=`pwd`/lib/kxml2-2.3.0.jar
 SWT_JAR=`pwd`/lib/swt.jar
 
 MIDPATH_JAR=$JAR_DIST_HOME/midpath.jar
-
-# Default include headers location (CC syntax)
 JNI_INCLUDE=-I${DIST_HOME}/../classpath-0.99/include
-SDL_INCLUDE=-I/opt/mmiyoo/arm-buildroot-linux-gnueabihf/sysroot/usr/include/SDL/SDL.h
 
-# JNI library defaults (those variables must exist and have a non-empty value)
+CC=gcc
+SDL_INCLUDE=-I/usr/include/SDL
+
 GTK_ENABLED=no
 ALSA_ENABLED=no
 ESD_ENABLED=no

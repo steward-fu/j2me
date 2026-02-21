@@ -1,7 +1,7 @@
-CC          = /opt/mmiyoo/bin/arm-linux-gnueabihf-gcc
+JAVA_DIR    = $(shell echo $$JAVA_HOME)
 CFLAGS      = -Os -fPIC
-CFLAGS     += -I/usr/lib/jvm/jdk1.6.0_45/include -I/usr/lib/jvm/jdk1.6.0_45/include/linux
-CFLAGS     += -I/opt/mmiyoo/arm-buildroot-linux-gnueabihf/sysroot/usr/include/SDL
+CFLAGS     += -I$(JAVA_DIR)/include -I$(JAVA_DIR)/include/linux
+CFLAGS     += -I/usr/include/SDL -I/usr/local/include/SDL
 SDLJAVA_LIB = -lSDL
 
 SDLJAVA_MIXER_OBJ = SDLMixer_wrap.o
@@ -16,11 +16,11 @@ SDLJAVA_IMAGE_LIB = -lSDL_image
 SDLJAVA_GFX_OBJ   = SDLGFX_wrap.o SDLVideo_wrap.o
 SDLJAVA_GFX_LIB   = -lSDL_gfx
 
-SDLJAVA_OBJ = SDLAudio_wrap.o\
-              SDLEvent_wrap.o\
-              SDLMain_wrap.o\
-              SDLVideo_wrap.o\
-              SDLJoystick_wrap.o\
+SDLJAVA_OBJ = SDLAudio_wrap.o \
+              SDLEvent_wrap.o \
+              SDLMain_wrap.o \
+              SDLVideo_wrap.o \
+              SDLJoystick_wrap.o \
               SDLCdrom_wrap.o
 
 all: libsdljava.so libsdljava_mixer.so libsdljava_ttf.so libsdljava_image.so libsdljava_gfx.so

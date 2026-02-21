@@ -1,11 +1,9 @@
-CC      = /opt/mmiyoo/bin/arm-linux-gnueabihf-gcc
-CFLAGS  = -Os -fPIC
-CFLAGS += -I/usr/lib/jvm/jdk1.6.0_45/include -I/usr/lib/jvm/jdk1.6.0_45/include/linux
-CFLAGS += -I/opt/mmiyoo/arm-buildroot-linux-gnueabihf/sysroot/usr/include/SDL
-
-SOURCES = java_nio_ByteBufferImpl.c
-
-OBJECTS = $(patsubst %.c, %.o, $(SOURCES))
+JAVA_DIR = $(shell echo $$JAVA_HOME)
+CFLAGS   = -Os -fPIC
+CFLAGS  += -I$(JAVA_DIR)/include -I$(JAVA_DIR)/include/linux
+CFLAGS  += -I/usr/include/SDL
+SOURCES  = java_nio_ByteBufferImpl.c
+OBJECTS  = $(patsubst %.c, %.o, $(SOURCES))
 
 all: libmidpathnio.so
 
